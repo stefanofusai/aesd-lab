@@ -14,7 +14,6 @@ func main() {
 	fmt.Print("Inserisci dei numeri ('-1' per uscire): ")
 
 	for scanner.Scan() {
-		line := scanner.Text()
 		inputs = append(inputs, input)
 	}
 
