@@ -8,26 +8,10 @@ import (
 	"strings"
 )
 
-type LanternFish struct {
-	timer int
-}
-
-func spawnLanternFish(timer int) *LanternFish {
-	return &LanternFish{timer: timer}
-}
-
-func (lf *LanternFish) updateTimer() {
-	if lf.timer == 0 {
-		lf.timer = 6
-	} else {
-		lf.timer--
-	}
-}
-
-const DAYS = 80
+const DAYS = 256
 
 func main() {
-	lfs := []*LanternFish{}
+	lfs := map[int]int{}
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("Initial state: ")
 
@@ -41,40 +25,25 @@ func main() {
 
 	for _, number := range numbers {
 		timer, _ := strconv.Atoi(number)
-		lfs = append(lfs, spawnLanternFish(timer))
+		lfs[timer]++
 	}
 
-	for i := 1; i <= DAYS; i++ {
-		// if i == 1 {
-		// 	fmt.Printf("After 1 day: ")
-		// } else {
-		// 	fmt.Printf("After %d days: ", i)
-		// }
+	for i := 0; i < DAYS; i++ {
+		zero_count := lfs[0]
 
-		new_lfs := []*LanternFish{}
-
-		for _, lf := range lfs {
-			if lf.timer == 0 {
-				new_lfs = append(new_lfs, spawnLanternFish(8))
-			}
-
-			lf.updateTimer()
+		for i := 0; i < 8; i++ {
+			lfs[i] = lfs[i+1]
 		}
 
-		lfs = append(lfs, new_lfs...)
-
-		// for index, lf := range lfs {
-		// 	if index < len(lfs)-1 {
-		// 		fmt.Printf("%d,", lf.timer)
-		// 	} else {
-		// 		fmt.Println(lf.timer)
-		// 	}
-		// }
-
-		if i == 1 {
-			fmt.Printf("After 1 day there will be %d lanternfishes\n", len(lfs))
-		} else {
-			fmt.Printf("After %d days there will be %d lanternfishes\n", i, len(lfs))
-		}
+		lfs[8] = zero_count
+		lfs[6] += zero_count
 	}
+
+	var total_lfs int
+
+	for _, counts := range lfs {
+		total_lfs += counts
+	}
+
+	fmt.Println(total_lfs)
 }
