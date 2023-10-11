@@ -85,4 +85,41 @@ func main() {
 		coordinates = coordinates_new
 	}
 
+	fmt.Println()
+
+	var max_x, max_y int
+
+	for coordinate := range coordinates {
+		if coordinate.x >= max_x {
+			max_x = coordinate.x
+		}
+
+		if coordinate.y >= max_y {
+			max_y = coordinate.y
+		}
+	}
+
+	matrix := make([][]int, max_y+1)
+
+	for i := range matrix {
+		matrix[i] = make([]int, max_x+1)
+	}
+
+	for coordinate := range coordinates {
+		matrix[coordinate.y][coordinate.x] = 1
+	}
+
+	for _, row := range matrix {
+		for _idx, num := range row {
+			if num == 0 {
+				fmt.Printf(" ")
+			} else {
+				fmt.Printf("&")
+			}
+
+			if _idx == max_x {
+				fmt.Println()
+			}
+		}
+	}
 }
